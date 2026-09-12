@@ -1,0 +1,162 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 8px 0;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.row {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #1f2329;
+}
+
+.pathRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.pathInput {
+  flex: 1;
+  font-family: "Cascadia Code", Consolas, "Courier New", monospace;
+  font-size: 12px;
+}
+
+.select {
+  width: 100%;
+}
+
+.resolution {
+  height: 32px;
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  color: #595959;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 6px;
+  padding: 0 11px;
+}
+
+.durationInfo {
+  font-size: 12px;
+  color: #8c8c8c;
+}
+
+.warnHint {
+  font-size: 12px;
+  color: #faad14;
+  background: rgba(250, 173, 20, 0.1);
+  border-radius: 4px;
+  padding: 6px 10px;
+}
+
+.errorHint {
+  font-size: 12px;
+  color: #ff4d4f;
+  background: rgba(255, 77, 79, 0.1);
+  border-radius: 4px;
+  padding: 6px 10px;
+}
+
+.exporting {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px 0;
+  align-items: center;
+}
+
+.exportingHint {
+  font-size: 13px;
+  color: #595959;
+}
+
+.pathDisplay {
+  font-family: "Cascadia Code", Consolas, "Courier New", monospace;
+  font-size: 11px;
+  color: #8c8c8c;
+  word-break: break-all;
+  text-align: center;
+  width: 100%;
+  max-height: 60px;
+  overflow: auto;
+}
+
+.completed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 24px 0;
+}
+
+.successIcon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(82, 196, 26, 0.1);
+  color: #52c41a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.successTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2329;
+}
+
+.successHint {
+  font-size: 13px;
+  color: #8c8c8c;
+}
+
+.failed {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 0;
+}
+
+.errorTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: #ff4d4f;
+}
+
+.errorDetail {
+  font-family: "Cascadia Code", Consolas, "Courier New", monospace;
+  font-size: 11px;
+  color: #595959;
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 6px;
+  padding: 10px 12px;
+  max-height: 240px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}

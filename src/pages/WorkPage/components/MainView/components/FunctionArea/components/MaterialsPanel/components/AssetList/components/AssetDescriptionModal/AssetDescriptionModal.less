@@ -1,0 +1,91 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 4px 0 8px;
+}
+
+.assetName {
+  font-size: 13px;
+  word-break: break-all;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sectionLabel {
+  font-size: 13px;
+  font-weight: 500;
+  color: #1f2329;
+}
+
+.descHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.hint {
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.clipHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.clipList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 360px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.clipRow {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  background: #fafafa;
+}
+
+.clipTimes {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.timeField {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.timeLabel {
+  font-size: 11px;
+  color: #646a73;
+  line-height: 1.2;
+}
+
+.clipContent {
+  :global(.ant-input) {
+    font-size: 12px;
+  }
+}
+
+.clipUsage {
+  :global(.ant-input) {
+    font-size: 12px;
+  }
+}

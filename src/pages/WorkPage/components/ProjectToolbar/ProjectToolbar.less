@@ -1,0 +1,95 @@
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 40px;
+  padding: 0 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  background: #fff;
+  flex-shrink: 0;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.projectDropdown {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 280px;
+  &:hover {
+    background: rgba(0, 0, 0, 0.04);
+  }
+}
+
+.projectName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 500;
+  color: #1f2329;
+}
+
+.dirty {
+  font-size: 12px;
+  color: #faad14;
+  flex-shrink: 0;
+}
+
+.dirtySave {
+  color: #faad14 !important;
+  &:hover {
+    color: #d48806 !important;
+  }
+}
+
+.hint {
+  margin-left: 12px;
+  font-size: 12px;
+  color: #8c8c8c;
+}
+
+.projectItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 180px;
+}
+
+.projectItemName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+}
+
+.projectItemDelete {
+  color: #8c8c8c;
+  cursor: pointer;
+  flex-shrink: 0;
+  &:hover {
+    color: #ff4d4f;
+  }
+}
+
+.newItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #1677ff;
+}

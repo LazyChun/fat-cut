@@ -1,0 +1,76 @@
+.track {
+  position: relative;
+  display: flex;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  box-sizing: border-box;
+}
+
+.label {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 8px;
+  background: #fafbfc;
+  border-right: 1px solid rgba(0, 0, 0, 0.08);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.name {
+  flex: 1;
+  font-size: 12px;
+  color: #1f2329;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actions {
+  display: none;
+  align-items: center;
+  gap: 2px;
+
+  .track:hover & {
+    display: flex;
+  }
+}
+
+.actionBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  color: #8c8c8c;
+  cursor: pointer;
+  flex-shrink: 0;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.06);
+    color: #1f2329;
+  }
+}
+
+.active {
+  color: #1677ff;
+  background: #e6f4ff;
+}
+
+.lane {
+  position: relative;
+  height: 100%;
+  min-width: 100%;
+}
+
+.over {
+  background: rgba(22, 119, 255, 0.06);
+}
+
+.emptyHint {
+  position: absolute;
+  inset: 0;
+}

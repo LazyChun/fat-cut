@@ -1,0 +1,32 @@
+{
+  "id": "cc4ba20e-ebd1-4dff-8962-740273d0579b",
+  "name": "fat-cut",
+  "version": "0.1.0",
+  "description": "A FatNotes bespoke plugin.",
+  "entry": "remoteEntry.js",
+  "mfName": "plugin_cc4ba20e_ebd1_4dff_8962_740273d0579b",
+  "container": "plugin_cc4ba20e_ebd1_4dff_8962_740273d0579b",
+  "exposed": "./plugin",
+  "contributions": {
+    "activityBar": true,
+    "primarySidebar": true,
+    "panel": false,
+    "footer": true,
+    "routes": true,
+    "widgetTypes": true
+  },
+  "permissions": [
+    "auth:read",
+    "dataSource:read",
+    "query:execute",
+    "mutation:execute",
+    "asset:read",
+    "asset:write"
+  ],
+  "backend": {
+    "enabled": true,
+    "entry": "backend/main.py",
+    "requirements": "backend/requirements.txt",
+    "depsStrategy": "vendor"
+  }
+}

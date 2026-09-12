@@ -1,0 +1,66 @@
+.filterClip {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  display: flex;
+  align-items: stretch;
+  border: 1px solid #722ed1;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: grab;
+  user-select: none;
+  box-sizing: border-box;
+  background: rgba(114, 46, 209, 0.15);
+  transition: box-shadow 0.15s;
+
+  &:hover {
+    box-shadow: 0 2px 6px rgba(114, 46, 209, 0.3);
+  }
+}
+
+.selected {
+  box-shadow:
+    0 0 0 2px #722ed1,
+    0 2px 6px rgba(114, 46, 209, 0.4);
+  z-index: 2;
+}
+
+.body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding: 0 4px;
+  overflow: hidden;
+  cursor: grab;
+}
+
+.label {
+  font-size: 11px;
+  font-weight: 500;
+  color: #722ed1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.handle {
+  width: 6px;
+  flex-shrink: 0;
+  cursor: ew-resize;
+  background: rgba(114, 46, 209, 0.25);
+  opacity: 0;
+  transition: opacity 0.15s;
+
+  &[data-edge="left"] {
+    border-right: 1px solid rgba(114, 46, 209, 0.3);
+  }
+
+  &[data-edge="right"] {
+    border-left: 1px solid rgba(114, 46, 209, 0.3);
+  }
+
+  .filterClip:hover & {
+    opacity: 1;
+  }
+}

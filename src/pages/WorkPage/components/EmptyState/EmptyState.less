@@ -1,0 +1,111 @@
+.heroCard {
+  position: relative;
+  max-width: 680px;
+  width: 100%;
+  padding: 56px 48px 44px;
+  border-radius: 24px;
+  background: #ffffff;
+  border: 1px solid #eef0f3;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.9) inset,
+    0 20px 50px rgba(31, 35, 41, 0.08),
+    0 6px 18px rgba(31, 35, 41, 0.04);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.heroIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #1677ff 0%, #6a3df5 100%);
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(22, 119, 255, 0.32);
+  margin-bottom: 24px;
+}
+
+.heroBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background: #e6f4ff;
+  border: 1px solid rgba(22, 119, 255, 0.15);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  color: #1677ff;
+}
+
+.heroTitle {
+  margin-top: 18px;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.5px;
+  color: #1f2329;
+}
+
+.heroDescription {
+  max-width: 480px;
+  margin-top: 14px;
+  margin-bottom: 32px;
+  font-size: 15px;
+  line-height: 1.75;
+  color: #5e6a7a;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.heroButton {
+  height: 44px;
+  padding: 0 28px !important;
+  border-radius: 10px !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  box-shadow: 0 6px 16px rgba(22, 119, 255, 0.28) !important;
+  transition: transform 0.18s ease, box-shadow 0.18s ease !important;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 22px rgba(22, 119, 255, 0.36) !important;
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.heroFeatures {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  margin-top: 36px;
+  flex-wrap: wrap;
+}
+
+.heroFeature {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #5e6a7a;
+}
+
+.heroFeatureIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: #eef4ff;
+  color: #1677ff;
+}

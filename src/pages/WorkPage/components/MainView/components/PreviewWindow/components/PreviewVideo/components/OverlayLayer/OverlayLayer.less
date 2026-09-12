@@ -1,0 +1,91 @@
+.layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.item {
+  position: absolute;
+  pointer-events: auto;
+  transform-origin: center center;
+  cursor: move;
+  box-sizing: border-box;
+}
+
+.selected {
+  outline: 1px dashed #1677ff;
+  outline-offset: 2px;
+}
+
+.handles {
+  position: absolute;
+  inset: -2px;
+  pointer-events: none;
+}
+
+.rotateHandle {
+  position: absolute;
+  top: -28px;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  margin-left: -7px;
+  border-radius: 50%;
+  background: #1677ff;
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  cursor: grab;
+  pointer-events: auto;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.rotateLine {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  width: 1px;
+  height: 14px;
+  margin-left: 0;
+  background: #1677ff;
+  pointer-events: none;
+}
+
+.scaleHandle {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: #ffffff;
+  border: 2px solid #1677ff;
+  border-radius: 2px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  pointer-events: auto;
+  box-sizing: border-box;
+}
+
+.tl {
+  top: -6px;
+  left: -6px;
+  cursor: nwse-resize;
+}
+
+.tr {
+  top: -6px;
+  right: -6px;
+  cursor: nesw-resize;
+}
+
+.bl {
+  bottom: -6px;
+  left: -6px;
+  cursor: nesw-resize;
+}
+
+.br {
+  bottom: -6px;
+  right: -6px;
+  cursor: nwse-resize;
+}

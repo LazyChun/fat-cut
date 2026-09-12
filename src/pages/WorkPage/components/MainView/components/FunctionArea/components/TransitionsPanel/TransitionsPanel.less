@@ -1,0 +1,123 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.hint {
+  padding: 6px 10px;
+  font-size: 11px;
+  color: #8c8c8c;
+  background: #fafafa;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.search {
+  padding: 6px 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.tabs {
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+
+  :global(.ant-tabs-content-holder) {
+    flex: auto;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  :global(.ant-tabs-content) {
+    height: 100%;
+  }
+
+  :global(.ant-tabs-tabpane) {
+    height: 100%;
+  }
+
+  :global(.ant-tabs-nav) {
+    margin: 0;
+    min-width: 78px;
+    flex: none;
+  }
+
+  :global(.ant-tabs-tab) {
+    padding: 6px 10px !important;
+    font-size: 12px;
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  grid-auto-rows: 80px;
+  align-content: start;
+  gap: 6px;
+  padding: 8px;
+  overflow-y: auto;
+  height: 100%;
+}
+
+.cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  border-radius: 4px;
+  cursor: grab;
+  overflow: hidden;
+  user-select: none;
+  background: #fafafa;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+
+  &:hover {
+    background: rgba(114, 46, 209, 0.08);
+    box-shadow: 0 1px 4px rgba(114, 46, 209, 0.2);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    cursor: grabbing;
+    transform: scale(0.98);
+  }
+}
+
+.thumbnail {
+  width: 100%;
+  height: 52px;
+  pointer-events: none;
+  overflow: hidden;
+  position: relative;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  &::before {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  }
+
+  &::after {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  }
+}
+
+.name {
+  flex: 1;
+  width: 100%;
+  padding: 2px 4px;
+  font-size: 11px;
+  color: #1f2329;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+}

@@ -1,0 +1,42 @@
+.container {
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  background: #fafafa;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 6px;
+}
+
+.sectionTitle {
+  margin: 4px 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #4e5969;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  align-items: end;
+}
+
+.row :global(.ant-form-item) {
+  margin-bottom: 8px;
+}
+
+.colorField {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.clearBtn {
+  flex-shrink: 0;
+  padding: 0 6px;
+  font-size: 11px;
+  color: #8c8c8c;
+
+  &:hover:not(:disabled) {
+    color: #1677ff;
+  }
+}

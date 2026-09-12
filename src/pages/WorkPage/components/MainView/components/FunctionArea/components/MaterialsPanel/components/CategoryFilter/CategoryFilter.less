@@ -1,0 +1,35 @@
+.filter {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  flex-shrink: 0;
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+}
+
+.category {
+  flex: 1;
+}
+
+.fileType {
+  width: 100px;
+}
+
+.fileType :global(.ant-select-selector) {
+  height: 28px !important;
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+
+.fileType :global(.ant-select-selection-item) {
+  flex-shrink: 0;
+}
+
+.search {
+  width: 100%;
+}

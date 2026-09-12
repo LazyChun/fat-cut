@@ -1,0 +1,95 @@
+.clip {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  border: 1px solid;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: grab;
+  user-select: none;
+  box-sizing: border-box;
+  transition: box-shadow 0.15s;
+
+  &:hover {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.selected {
+  box-shadow:
+    0 0 0 2px #1677ff,
+    0 2px 6px rgba(22, 119, 255, 0.3);
+  z-index: 2;
+}
+
+.dragging {
+  opacity: 0.35;
+}
+
+.label {
+  font-size: 11px;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.effectBadge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  min-width: 14px;
+  height: 14px;
+  padding: 0 3px;
+  border-radius: 8px;
+  background: #13c2c2;
+  color: #fff;
+  font-size: 10px;
+  line-height: 14px;
+  text-align: center;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.keyframeMarker {
+  position: absolute;
+  bottom: 0px;
+  transform: translateX(-50%);
+  color: #ff4d4f;
+  font-size: 10px;
+  cursor: pointer;
+  z-index: 3;
+  line-height: 1;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+
+  &:hover {
+    transform: translateX(-50%) scale(1.2);
+  }
+}
+
+.handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  cursor: ew-resize;
+  background: rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  transition: opacity 0.15s;
+
+  &[data-edge="left"] {
+    left: 0;
+  }
+
+  &[data-edge="right"] {
+    right: 0;
+  }
+
+  .clip:hover & {
+    opacity: 1;
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "fat-cut-ai-arrangement",
+  "description": "为 fat-cut 提供剪辑编排配置生成与时间线构建能力",
+  "transport": "stdio",
+  "command": "python",
+  "args": ["backend/mcp_server.py"],
+  "cwd": ".",
+  "tools": [
+    "generate_clip_arrangement_config_tool",
+    "build_clip_arrangement_timeline_tool"
+  ]
+}

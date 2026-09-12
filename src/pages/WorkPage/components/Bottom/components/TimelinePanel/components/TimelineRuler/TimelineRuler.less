@@ -1,0 +1,70 @@
+.ruler {
+  position: relative;
+  display: flex;
+  height: 24px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  background: #fafbfc;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.corner {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: #fafbfc;
+  border-right: 1px solid rgba(0, 0, 0, 0.08);
+  flex-shrink: 0;
+}
+
+.ticksArea {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+.tick {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(0, 0, 0, 0.15);
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 6px;
+    background: rgba(0, 0, 0, 0.3);
+  }
+}
+
+.tickLabel {
+  position: absolute;
+  top: 8px;
+  left: 4px;
+  font-size: 10px;
+  color: #8c8c8c;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.keyframeMarker {
+  position: absolute;
+  top: 3px;
+  width: 8px;
+  height: 8px;
+  margin-left: -4px;
+  background: #ffb020;
+  border: 1px solid #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  transform: rotate(45deg);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.activeKeyframe {
+  background: #1677ff;
+}
