@@ -125,7 +125,7 @@ interface MyThreadPool {
 // 国际化函数返回
 interface I18nFn {
   text: (id?: string, values?: Record<string, string | number>) => string;
-  textField: (record: object | undefined, fieldName: string) => string;
+  field: (record: object | undefined, fieldName: string) => string;
   locale: string;
   value: string;
 }

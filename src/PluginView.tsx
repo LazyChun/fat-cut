@@ -1,6 +1,6 @@
 /*
  * Plugin board config demo:
- * - Uses host remote component sdk.remoteComponents.PluginWidgetBox
+ * - Uses host remote component sdk.remoteComponents.PluginBlockBox
  * - Saves board config under confs/boards/<uniqueKey>/file.json
  * - Saves dependencies under confs/boards/<uniqueKey>/dependencies.json
  */
@@ -8,7 +8,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import type {
   FatNotesPluginSDK,
   PluginBoardDependency,
-  PluginWidgetBoxBoardApi,
+  PluginBlockBoxBoardApi,
 } from "fat-notes-sdk";
 
 interface Props {
@@ -17,23 +17,23 @@ interface Props {
 
 const PluginView: React.FC<Props> = ({ sdk }) => {
   const [boardMeta, setBoardMeta] = useState<Record<string, unknown>>({});
-  const [widgets, setWidgets] = useState<unknown[]>([]);
+  const [blocks, setBlocks] = useState<unknown[]>([]);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const uniqueKey = "default";
-  const PluginWidgetBox = sdk.remoteComponents.PluginWidgetBox;
+  const PluginBlockBox = sdk.remoteComponents.PluginBlockBox;
   const isDevMode = sdk.host.mode === "dev";
 
   const loadBoard = useCallback(async () => {
     setLoading(true);
     try {
-      const [conf, deps, boxWidgets] = await Promise.all([
+      const [conf, deps, boxBlocks] = await Promise.all([
         sdk.boards.getBoard<Record<string, unknown>>(uniqueKey),
         sdk.boards.getDependencies(uniqueKey),
-        sdk.boards.getBoardWidgets(uniqueKey),
+        sdk.boards.getBoardBlocks(uniqueKey),
       ]);
       setBoardMeta(conf || {});
-      setWidgets(boxWidgets || []);
+      setBlocks(boxBlocks || []);
     } catch (e) {
       sdk.ui.toast.error(`Load board failed: ${(e as Error).message}`);
     } finally {
@@ -90,33 +90,33 @@ const PluginView: React.FC<Props> = ({ sdk }) => {
   const boardId = useMemo(() => {
     return `plugin:${sdk.pluginId}:${uniqueKey}`;
   }, [boardMeta, sdk.pluginId]);
-  const boardApi = useMemo<PluginWidgetBoxBoardApi>(
+  const boardApi = useMemo<PluginBlockBoxBoardApi>(
     () => ({
       loadBoard: async () => {
         const detail = await sdk.boards.getBoardDetail(uniqueKey);
         return {
           name: detail.name,
           type: detail.type,
-          widgets: detail.widgets,
+          blocks: detail.blocks,
         };
       },
       saveBoard: async (input) => {
         const detail = await sdk.boards.saveBoardDetail(uniqueKey, input);
         setBoardMeta(detail.config || {});
-        setWidgets(detail.widgets || []);
+        setBlocks(detail.blocks || []);
         return detail;
       },
-      createCard: (widget) => sdk.boards.createWidget(uniqueKey, widget),
-      updateCard: (widget) => sdk.boards.updateWidget(uniqueKey, widget),
-      deleteCard: (widgetId) => sdk.boards.deleteWidget(uniqueKey, widgetId),
+      createCard: (block) => sdk.boards.createBlock(uniqueKey, block),
+      updateCard: (block) => sdk.boards.updateBlock(uniqueKey, block),
+      deleteCard: (blockId) => sdk.boards.deleteBlock(uniqueKey, blockId),
     }),
     [sdk, uniqueKey],
   );
 
   return (
     <div style={{ position: "relative" }}>
-      <PluginWidgetBox
-        widgets={widgets}
+      <PluginBlockBox
+        blocks={blocks}
         boardId={boardId}
         minHeight={280}
         boardApi={boardApi}

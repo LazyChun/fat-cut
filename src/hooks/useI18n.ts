@@ -24,7 +24,7 @@ const useI18n = () => {
     }, [intl]);
 
     // 获取对象国际化字段
-    const textField = useMemo(() => {
+    const field = useMemo(() => {
       return (record: object | undefined, fieldName: string) => {
         // @ts-ignore
         const fieldValue = get(record, fieldName + i18nSuffix[intl.locale]);
@@ -35,10 +35,10 @@ const useI18n = () => {
     // 兼容性处理，将'-'替换为'_'
     const i18nObj = useMemo(() => ({
       text,
-      textField,
+      field,
       locale: intl.locale.replace("-", "_"),
       value: intl.locale.toLowerCase().indexOf("en") >= 0 ? "en" : "cn",
-    }), [text, textField, intl.locale]);
+    }), [text, field, intl.locale]);
 
     // 在 useEffect 中设置全局 window.i18n，避免在渲染过程中触发监听
     useEffect(() => {
@@ -53,7 +53,7 @@ const useI18n = () => {
     }
     return {
       text: () => "i18n error",
-      textField: () => "i18n error",
+      field: () => "i18n error",
       locale: "",
       value: "",
     };
