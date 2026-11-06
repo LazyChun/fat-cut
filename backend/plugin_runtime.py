@@ -38,6 +38,18 @@ def _host_plugin_id() -> str:
     return (os.getenv("FAT_NOTES_PLUGIN_ID") or "").strip()
 
 
+def _host_api_token() -> str:
+    return (os.getenv("FAT_NOTES_API_TOKEN") or "").strip()
+
+
+def _host_request_headers() -> Dict[str, str]:
+    headers = {"Content-Type": "application/json"}
+    token = _host_api_token()
+    if token:
+        headers["X-Fat-Api-Token"] = token
+    return headers
+
+
 def _host_call(method: str, params: Optional[Dict[str, Any]] = None) -> Any:
     base = _host_base_url()
     pid = _host_plugin_id()
@@ -53,7 +65,7 @@ def _host_call(method: str, params: Optional[Dict[str, Any]] = None) -> Any:
     req = _urlrequest.Request(
         url,
         data=payload,
-        headers={"Content-Type": "application/json"},
+        headers=_host_request_headers(),
         method="POST",
     )
     opener = _urlrequest.build_opener(_urlrequest.ProxyHandler({}))
@@ -62,6 +74,8 @@ def _host_call(method: str, params: Optional[Dict[str, Any]] = None) -> Any:
             body = resp.read().decode("utf-8")
     except _urlerror.HTTPError as e:
         err = e.read().decode("utf-8", errors="ignore")
+        if e.code == 401 and not _host_api_token():
+            err = f"{err} FAT_NOTES_API_TOKEN is not set".strip()
         raise RuntimeError(f"Host API HTTPError {e.code}: {err}") from e
     except Exception as e:
         raise RuntimeError(f"Host API request failed: {e}") from e

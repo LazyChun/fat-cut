@@ -21,6 +21,7 @@ const HANDLERS = {
 
 function buildPyFuncCode(pluginId: string, handler: string): string {
   return (
+    "import os\n" +
     "import requests\n" +
     "import json\n" +
     "\n" +
@@ -37,9 +38,16 @@ function buildPyFuncCode(pluginId: string, handler: string): string {
     '",\n' +
     '        "params": params.get("params", {}) if isinstance(params, dict) else {},\n' +
     "    }\n" +
+    "    headers = {\n" +
+    '        "Content-Type": "application/json",\n' +
+    '        "X-From-Agent": "1",\n' +
+    "    }\n" +
+    '    token = (os.environ.get("FAT_API_TOKEN") or "").strip()\n' +
+    "    if token:\n" +
+    '        headers["x-fat-api-token"] = token\n' +
     "    sess = requests.Session()\n" +
     "    sess.trust_env = False\n" +
-    '    resp = sess.post(url, json=body, headers={"Content-Type": "application/json", "X-From-Agent": "1"}, timeout=60)\n' +
+    "    resp = sess.post(url, json=body, headers=headers, timeout=60)\n" +
     "    try:\n" +
     "        return resp.json()\n" +
     "    except Exception:\n" +

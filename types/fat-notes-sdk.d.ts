@@ -1,8 +1,10 @@
 /*
  * FatNotes Bespoke Plugin SDK — mirror of
- * `fat-notes-core/src/frontend/pluginSdk/types.ts`.
+ * `fat-notes/src/frontend/pluginSdk/types.ts`.
  *
  * Keep this file in sync with the host types when upgrading the CLI.
+ * The host types `Block.Item` as a global namespace. Plugin projects do not
+ * have that namespace, so this mirror uses `PluginBlockItem` instead.
  */
 import type { ComponentType, CSSProperties, ReactNode } from "react";
 
@@ -146,20 +148,20 @@ export interface RoutePageDef {
 }
 
 /**
- * Canvas-level time context snapshot injected into plugin block render
- * props by the host. Chart blocks rely on startTime/endTime to run
- * queries and on refreshTime to re-query when the range changes.
+ * 画布级时间上下文快照，由宿主从 TimeContext 提取后注入插件 block
+ * 的 render props。图表类卡片依赖 startTime/endTime 发起数据查询，
+ * 并通过 refreshTime 感知时间范围刷新。
  */
 export interface BlockTimeContext {
-  /** Relative time token (e.g. "/d"); empty for absolute ranges */
+  /** 相对时间 token（如 "/d"），绝对时间范围为空字符串 */
   relativeTime?: string;
-  /** Start time (TIME_FORMAT: "YYYY-MM-DD HH:mm:ss") */
+  /** 开始时间（TIME_FORMAT: "YYYY-MM-DD HH:mm:ss"） */
   startTime?: string;
-  /** End time (TIME_FORMAT: "YYYY-MM-DD HH:mm:ss") */
+  /** 结束时间（TIME_FORMAT: "YYYY-MM-DD HH:mm:ss"） */
   endTime?: string;
-  /** Refresh timestamp - blocks should re-query when it changes */
+  /** 刷新时间戳 — 变化时卡片应重新查询数据 */
   refreshTime?: number;
-  /** Update the time range (triggered by the host time selector) */
+  /** 更新时间范围（由宿主时间选择器触发） */
   onUpdateTime: (
     relativeTime: string,
     startTime: string,
@@ -167,16 +169,121 @@ export interface BlockTimeContext {
   ) => void;
 }
 
-/** Plugin block render props - extension fields are optional (backwards compatible) */
+/** 插件卡片可注册的触发方式 */
+export interface BlockActionTriggerDef {
+  /** 触发方式 id，写入事件 action.trigger，如 clickTrendDot */
+  id: string;
+  /** 展示文案。缺省时宿主使用 action.trigger.type.{id} */
+  title?: string;
+}
+
+/** 插件卡片点击后上报给宿主事件菜单的参数。posX/posY 相对 chartId 元素左上角 */
+export interface BlockActionShowParams {
+  posX: number;
+  posY: number;
+  serieId?: string;
+  mValue?: number;
+  dValue?: string;
+  mUnit?: string;
+  xValue?: number;
+  dimensions?: Array<{
+    dsColId?: string;
+    name?: string;
+    value?: string;
+  }>;
+  startTime?: string;
+  endTime?: string;
+  relativeTime?: string;
+  startTimestamp?: string;
+  endTimestamp?: string;
+  width?: number;
+  height?: number;
+}
+
+/**
+ * Loose view of the host block item (`Block.Item` in fat-notes-core).
+ * Only the fields plugins commonly read are named; the host still passes the
+ * full block, including reqParams and commonOptions.
+ */
+export interface PluginBlockItem {
+  id: string;
+  type: string;
+  title?: string;
+  boardId?: string;
+  reqParams?: unknown;
+  commonOptions?: unknown;
+  options?: unknown;
+  actions?: unknown[];
+  [key: string]: unknown;
+}
+
+/** Plugin block render props — 扩展字段均为可选，保持向后兼容 */
 export interface BlockRenderProps {
-  /** Block private options (Block.Item.options) */
+  /** 卡片私有配置（Block.Item.options） */
   config: unknown;
-  /** Full host Block.Item (reqParams/commonOptions included) for data queries */
-  item?: unknown;
-  /** Whether rendered inside the config drawer preview */
+  /** 宿主 Block.Item 完整数据（含 reqParams/commonOptions），供数据查询使用 */
+  item?: PluginBlockItem;
+  /** 是否渲染在配置抽屉的预览区 */
   inConfig?: boolean;
-  /** Canvas-level time context (provided on canvas / config drawer) */
+  /** 画布级时间上下文（仅画布/配置抽屉内提供） */
   time?: BlockTimeContext;
+  /** 宿主事件浮层定位用的根节点 id，插件应以此计算点击偏移 */
+  chartId?: string;
+  /** 事件菜单是否正打开，用于隐藏图表 tooltip */
+  actionsVisible?: boolean;
+  /**
+   * 打开宿主事件菜单。仅在卡片注册了 actionIds / triggers 且不在配置预览时提供。
+   */
+  onShowActions?: (params: BlockActionShowParams) => void;
+}
+
+/**
+ * 组件配置抽屉下方「数据/查询」区域的自定义渲染。
+ * 与 `BlockTypeDef.dataConfig === false`（隐藏）互斥：有 render 时替换宿主默认查询面板。
+ */
+export interface BlockDataConfigDef {
+  /** 渲染于配置抽屉预览区下方，替代默认 DataConfig */
+  render: () => ReactNode;
+}
+
+/** 配置说明里的一个字段。路径相对 options / reqParams / commonOptions。 */
+export interface BlockConfigFieldDoc {
+  path: string;
+  name: string;
+  /** string | number | boolean | object | array */
+  dataType: string;
+  description?: string;
+  required?: boolean;
+  enum?: Array<string | number | boolean>;
+  default?: unknown;
+}
+
+/** 配置说明的一个分区：options 属性、reqParams 请求参数、commonOptions 公共配置。 */
+export interface BlockConfigSectionDoc {
+  key: "options" | "reqParams" | "commonOptions" | string;
+  description: string;
+  fields?: BlockConfigFieldDoc[];
+  /** 这一区可直接写入创建卡片接口的示例 */
+  example?: unknown;
+}
+
+/**
+ * 给 AI 的卡片配置格式说明。
+ * 随 registerBlockType 同步到宿主 MCP「查询卡片配置说明」。
+ * 只能放可 JSON 序列化的数据，不要放函数或组件。
+ */
+export interface BlockConfigDoc {
+  /** 与 BlockTypeDef.type 一致 */
+  type: string;
+  title: string;
+  /** 一句话用途，参与关键词检索 */
+  summary: string;
+  category?: string;
+  /** 额外检索词，例如趋势图、时序图 */
+  keywords?: string[];
+  layout?: { w?: number; h?: number; description?: string };
+  sections?: BlockConfigSectionDoc[];
+  notes?: string[];
 }
 
 export interface BlockTypeDef {
@@ -185,7 +292,10 @@ export interface BlockTypeDef {
   icon?: string;
   iconUrl?: string;
   category?: string;
-  /** Sort weight in the add-block menu; smaller comes first. */
+  /**
+   * 添加组件菜单内的排序权重，数值越小越靠前。
+   * 未设置时排在已设置 index 的项之后，并保持原有相对顺序。
+   */
   index?: number;
   render: (props: BlockRenderProps) => ReactNode;
   defaultSize?: {
@@ -196,6 +306,53 @@ export interface BlockTypeDef {
     maxW?: number;
     maxH?: number;
   };
+  /**
+   * 新建卡片时写入 options 的默认值。
+   * 宿主 getDefaultBlockConf 在内置类型未命中时使用，调用方会深拷贝。
+   */
+  defaultOptions?: Record<string, unknown>;
+  /**
+   * 新建卡片时合并进 commonOptions 的默认值，调用方会深拷贝。
+   */
+  defaultCommonOptions?: Record<string, unknown>;
+  /**
+   * 组件配置抽屉下方「数据/查询」区域：
+   * - 未设置：使用宿主默认查询配置（iframe/spider 仍走内置 CustomDataConfig）
+   * - false：隐藏该区域（预览区占满左侧）
+   * - { render }：用插件自定义内容替换默认查询配置
+   */
+  dataConfig?: false | BlockDataConfigDef;
+  /**
+   * 事件编辑器中可选的事件类型。
+   * 内置 id：relate 联动、drill 下钻、update 更新、filter 过滤、delete 删除、linkTo 跳转、switchScene 切换场景页面。
+   */
+  actionIds?: string[];
+  /**
+   * 事件编辑器中可选的触发方式。
+   * 字符串为触发 id（展示文案走 action.trigger.type.{id}），对象可自带 title。
+   */
+  triggers?: Array<string | BlockActionTriggerDef>;
+  /**
+   * 给 AI 的配置格式说明。宿主会同步到 MCP「查询卡片配置说明」。
+   * 注册了卡片就应带上，这样助手创建该卡片前能查到 options、reqParams、commonOptions。
+   */
+  configDoc?: BlockConfigDoc;
+}
+
+/**
+ * 添加组件菜单中的分类。插件用 `registerBlockCategory` 注册后，
+ * `BlockTypeDef.category` 引用这里的 `id`。标题由插件按当前语言给出。
+ */
+export interface BlockCategoryDef {
+  /** 分类 id，与 BlockTypeDef.category 对应，例如 "structure"。 */
+  id: string;
+  /** 已按当前语言翻译好的展示名。 */
+  title: string;
+  /**
+   * 插在该分类 id 后面。锚点可以是内置分类，或更早注册的插件分类。
+   * 锚点不存在时，排在内置「其他」之前。
+   */
+  after?: string;
 }
 
 export interface SettingsPageDef {
@@ -204,9 +361,95 @@ export interface SettingsPageDef {
   render: () => ReactNode;
 }
 
+// ── Flow Node Type (plugin-contributed workflow nodes) ───────────────
+
+/** Canvas render props handed to a plugin flow node's `render` component. */
+export interface PluginFlowNodeRenderProps {
+  /** The LogicFlow node being rendered (loose typing across SDK boundary). */
+  node: unknown;
+  /** Host i18n helper ({ text, field, locale }) — resolves host catalogs. */
+  i18n: unknown;
+}
+
+/** Context passed to a plugin node's `initDefaultNode` when the node is created. */
+export interface PluginFlowNodeInitCtx {
+  node: unknown;
+  flow: unknown;
+  i18nText: (text: string) => string;
+  extra?: unknown;
+}
+
+/**
+ * A workflow (flow) node type contributed by a plugin.
+ *
+ * Mirrors the host's `Block.FlowTypeItem` metadata plus the UI pieces the
+ * host needs to render/edit the node: `render` draws the canvas card,
+ * `edit` renders inside the host's FlowEditDrawer (it should consume
+ * `sdk.remoteComponents.FlowEditCommon.useFlowNode()` to read/write the
+ * node), and `initDefaultNode` assigns type-specific defaults on creation.
+ */
+export interface PluginFlowNodeTypeDef {
+  /** Node type id, e.g. "scBrowserClickWebElement". Must be globally unique. */
+  type: string;
+  /** Display name — host i18n key or plain text. */
+  name: string;
+  /** Host IconType value (e.g. "browser") or empty. */
+  iconType?: string;
+  iconUrl?: string;
+  /** Theme color (e.g. "#1677ff", "green"). */
+  color?: string;
+  /** Panel category, e.g. "browser" | "media" | "ai". */
+  category?: string;
+  theme?: "light" | "dark" | string;
+  /** Default description — host i18n key or plain text. */
+  defaultDescription?: string;
+  width?: number;
+  height?: number;
+  /** Assign type-specific defaults when a node of this type is created. */
+  initDefaultNode?: (ctx: PluginFlowNodeInitCtx) => void;
+  /** Canvas card component (rendered inside the node frame). */
+  render: ComponentType<PluginFlowNodeRenderProps>;
+  /** Edit-drawer component (rendered inside host FlowNodeContext). */
+  edit: ComponentType<Record<string, unknown>>;
+}
+
 export interface WorkbenchPageDef {
   id: string;
   render: () => ReactNode;
+}
+
+// ── AI Settings Section (plugin-contributed AI settings tabs) ────────
+
+/** Render props handed to a plugin AI-settings section's `render` callback. */
+export interface PluginAiSettingsSectionRenderProps {
+  /** Host i18n helper ({ text }) — resolves host catalogs. */
+  i18n: { text: (key: string, values?: any) => string };
+}
+
+/**
+ * A settings tab contributed by a plugin inside the host's "AI 配置"
+ * (AiSettingsPage) work area. The section appears in the AiManage sidebar
+ * menu (label resolved from `i18nTitleKey`) and its content renders inside
+ * the AiSettingsPage container. When a section id collides with a host
+ * built-in tab id, the plugin section takes precedence (mirrors
+ * flow.getSysNodeTypes merging). When the plugin is not installed, a
+ * persisted provider record keeps the menu entry alive with install
+ * guidance.
+ */
+export interface PluginAiSettingsSectionDef {
+  /** Section id, e.g. "kb". Same id as a host built-in tab overrides it. */
+  id: string;
+  /** Host i18n key for the sidebar menu label (e.g. "ai.manage.tab.kb"). */
+  i18nTitleKey: string;
+  /** Host IconType value (reserved for future menu icons). */
+  iconType?: string;
+  /**
+   * Sort weight — smaller comes first. Host built-in tabs occupy 0..N;
+   * sections without `order` append after all built-ins.
+   */
+  order?: number;
+  /** Section content component (rendered inside host AiSettingsPage). */
+  render: (props: PluginAiSettingsSectionRenderProps) => ReactNode;
 }
 
 export interface MenuItemDef {
@@ -224,6 +467,43 @@ export interface BlockDisplayConfigDef {
   render: () => ReactNode;
 }
 
+/** 插件注册到全局搜索的单个搜索项 */
+export interface PluginSearchItemDef {
+  /** 项唯一 id（插件内唯一，推荐 "<pluginId>.<itemId>"） */
+  id: string;
+  /** 名称（主匹配文本） */
+  title: string;
+  /** 描述（次匹配文本 + 搜索结果第二行） */
+  desc?: string;
+  /** 图标组件（搜索结果回显） */
+  icon?: ComponentType<{ style?: CSSProperties }>;
+  /** 额外匹配关键词（命中但不高亮） */
+  keywords?: string[];
+  /** 搜索结果类型标签文案（如 "工具"）；缺省用宿主 i18n type.plugin */
+  tag?: string;
+  /**
+   * 输入内容匹配模式：用户搜索文本命中该正则时，本项也出现在结果中
+   * （如计算器的算式输入 1+1、sqrt(16)）。命中优先级低于名称匹配。
+   */
+  inputPattern?: RegExp;
+  /** 点击后需激活的活动栏/工作台页共用 id（如 fat-tools.main）；缺省不切换视图 */
+  activityId?: string;
+  /** 点击回调（宿主切换视图后执行）；query 为触发本次命中的搜索文本（inputPattern 场景自动填入用） */
+  onSelect?: (query?: string) => void;
+}
+
+/** 插件注册的全局搜索提供者 */
+export interface SearchProviderDef {
+  /** 提供者 id，推荐 "<pluginId>.search" */
+  id: string;
+  /** 提供者名称（缺省类型标签回退） */
+  name?: string;
+  /** 项缺省图标组件 */
+  icon?: ComponentType<{ style?: CSSProperties }>;
+  /** 搜索项列表 */
+  items: PluginSearchItemDef[];
+}
+
 export interface ContributionsApi {
   registerActivityBarItem(def: ActivityBarItemDef): Disposable;
   /** Register the plugin's primary sidebar contribution using only a render callback. */
@@ -234,9 +514,30 @@ export interface ContributionsApi {
   registerRoutePage(def: RoutePageDef): Disposable;
   registerWorkbenchPage(def: WorkbenchPageDef): Disposable;
   registerBlockType(def: BlockTypeDef): Disposable;
+  /**
+   * 注册添加组件菜单的分类。卸载插件或 dispose 后分类消失，
+   * 其下卡片若仍注册着，会排到菜单末尾。
+   */
+  registerBlockCategory(def: BlockCategoryDef): Disposable;
   registerBlockDisplayConfig(def: BlockDisplayConfigDef): Disposable;
   registerSettingsPage(def: SettingsPageDef): Disposable;
+  registerSearchProvider(def: SearchProviderDef): Disposable;
   registerMenu(target: string, items: MenuItemDef[]): Disposable;
+  /**
+   * Register a workflow (flow) node type. The node appears in the host's
+   * add-node panel under `def.category` and is rendered/edited with the
+   * plugin-provided components. When the plugin is not installed, flows
+   * that contain the node render a placeholder with install guidance.
+   */
+  registerFlowNodeType(def: PluginFlowNodeTypeDef): Disposable;
+  /**
+   * Register a tab section inside the host's "AI 配置" settings page
+   * (AiSettingsPage + AiManage sidebar menu). The section's id may collide
+   * with a host built-in tab id — the plugin section then takes precedence.
+   * When the plugin is not installed, previously registered sections keep
+   * showing a placeholder with install guidance.
+   */
+  registerAiSettingsSection(def: PluginAiSettingsSectionDef): Disposable;
   /**
    * Request the host to hide the secondary sidebar while this registration
    * is active. Disposing the returned `Disposable` restores the previous
@@ -883,6 +1184,78 @@ export interface VarInputProps {
   className?: string;
 }
 
+/**
+ * Loose bag of host flow-edit infrastructure exposed to plugins that
+ * contribute flow node types. Every entry is the actual host export —
+ * components render inside the host tree so contexts (Redux, Intl,
+ * FlowNodeContext) keep working.
+ */
+export interface FlowEditCommonApi {
+  useFlowNode: unknown;
+  useI18n: unknown;
+  useAppDispatch: unknown;
+  useAppSelector: unknown;
+  fetchAiConf: unknown;
+  FlowNodeContext: unknown;
+  FatForm: unknown;
+  EasyVarInput: unknown;
+  VarInput: unknown;
+  Tip: unknown;
+  Icon: unknown;
+  EllipsisText: unknown;
+  FatJsonEditor: unknown;
+  IconType: unknown;
+  requests: unknown;
+  basic: unknown;
+  // FlowEditDrawer shared base components
+  VarsInputs: unknown;
+  VarsOutputs: unknown;
+  FlowCollapse: unknown;
+  VarValue: unknown;
+  VarName: unknown;
+  VarSelector: unknown;
+  BlockLine: unknown;
+  FlowIcon: unknown;
+  ErrorHandle: unknown;
+  ErrorOutput: unknown;
+  VarParams: unknown;
+  DsTableSelector: unknown;
+  DsConditions: unknown;
+  DsColsUpdate: unknown;
+  BasicConditions: unknown;
+  BasicFlowNodeEdit: unknown;
+  ErrorIgnore: unknown;
+  ActionsAfterDone: unknown;
+  MousePosPicker: unknown;
+  MouseRegionPicker: unknown;
+  MouseColorPicker: unknown;
+  MouseTextPicker: unknown;
+  WebElementSelectorPicker: unknown;
+  ModelSelect: unknown;
+  FrameStyleEdit: unknown;
+  // AI settings shared symbols (AiSettingsPage plugin sections)
+  addKnowledgeBase: unknown;
+  editKnowledgeBase: unknown;
+  deleteKnowledgeBase: unknown;
+  reorderKnowledgeBases: unknown;
+  addOcr: unknown;
+  editOcr: unknown;
+  deleteOcr: unknown;
+  reorderOcrs: unknown;
+  setDefaultOcr: unknown;
+  IconButton: unknown;
+  AiSettingsEmpty: unknown;
+  getServerBase: unknown;
+  TIME_FORMAT: unknown;
+}
+
+/** Loose bag of host canvas-node base components (BlockFlowNode base). */
+export interface FlowNodeCommonApi {
+  InputTags: unknown;
+  OutputTags: unknown;
+  DotRegion: unknown;
+}
+
 export interface RemoteComponentsApi {
   PluginBlockBox: ComponentType<{
     blocks?: unknown[];
@@ -897,6 +1270,20 @@ export interface RemoteComponentsApi {
   BlockConfigCommon: BlockConfigCommonApi;
   /** Public data-query config components for bespoke plugins. */
   DataQueryCommon: DataQueryCommonApi;
+  /**
+   * Host flow-edit infrastructure for plugins contributing flow node types
+   * (via `sdk.contributions.registerFlowNodeType`). Contains the shared
+   * edit-drawer base components (VarsInputs, VarsOutputs, ErrorHandle,
+   * FlowCollapse, FatForm, ...), the `useFlowNode`/`useI18n` hooks, the
+   * host `FlowNodeContext`, and misc utils (requests, basic). All members
+   * are loose `unknown` — plugin projects re-type them locally.
+   */
+  FlowEditCommon: FlowEditCommonApi;
+  /**
+   * Host canvas-node base components (InputTags, OutputTags, ...) for
+   * plugin flow node `render` components.
+   */
+  FlowNodeCommon: FlowNodeCommonApi;
   /** Host time-range selector for bespoke plugins. */
   TimeSelector: ComponentType<TimeSelectorProps>;
   /** Host unit selector (searchable cascader) for bespoke plugins. */
